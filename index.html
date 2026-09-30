@@ -129,6 +129,7 @@
         <span id="count" class="count"></span>
         <button class="btn-outline small" onclick="rouletteBrowse()">🎲 Surprise me</button>
         <button class="btn-outline small" onclick="openBlindDate()">🙈 Blind Date</button>
+        <button class="btn-outline small" onclick="openRequestForm()">📩 Request a book</button>
       </div>
       <div class="grid" id="grid"></div>
     </div>
@@ -170,6 +171,21 @@
   <div class="modal">
     <button class="modal-close" onclick="closeQuiz()">✕</button>
     <div id="quizBody"></div>
+  </div>
+</div>
+
+<!-- Request a book modal -->
+<div class="modal-backdrop" id="requestModal" onclick="if(event.target===this)closeRequestForm()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeRequestForm()">✕</button>
+    <h3>Request a book</h3>
+    <p class="detail-desc">Can't find a book? Tell us and we'll prioritize adding it.</p>
+    <form id="requestForm" onsubmit="submitRequestForm(event)">
+      <label>Title <input required id="r_title"></label>
+      <label>Author (if known) <input id="r_author"></label>
+      <label>Anything else? <input id="r_note" placeholder="e.g. heard it has heavy spice…"></label>
+      <button class="btn-solid" type="submit">Submit request</button>
+    </form>
   </div>
 </div>
 
