@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Filter X — Read with Confidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">📖 <span>Filter X</span></div>
+  <nav class="tabs">
+    <button class="tab-btn active" data-view="home" onclick="showView('home')">Home</button>
+    <button class="tab-btn" data-view="browse" onclick="showView('browse')">Browse</button>
+    <button class="tab-btn" data-view="library" onclick="showView('library')">My Library</button>
+  </nav>
+  <button class="icon-btn theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle spicy dark mode">🌙</button>
+  <button class="btn-solid small" onclick="openAddForm()">+ Add a book</button>
+</header>
+
+<!-- ============ HOME ============ -->
+<section class="view active" id="view-home">
+  <div class="greeting">
+    <div class="hero-art">
+      <div class="sparkle">✨</div>
+      <div class="book-stack">
+        <div class="stack-book b1"><span>💜</span>Better Choices</div>
+        <div class="stack-book b2"><span>🛡️</span>Safer Reads</div>
+        <div class="stack-book b3"><span>😊</span>Happier Readers</div>
+      </div>
+      <div class="mug-card">📖 Good books.<br>No surprises. ♥</div>
+    </div>
+    <h1 id="greetingText">👋 Ready to find your next book?</h1>
+    <div class="search-bar">
+      <input id="homeSearch" type="text" placeholder="What are you in the mood to read?" onkeydown="if(event.key==='Enter')goSearch()">
+      <button onclick="goSearch()">Search</button>
+    </div>
+    <div class="chiprow" id="quickChips"></div>
+  </div>
+
+  <div id="continueSection" class="home-section" style="display:none;">
+    <h2>Continue reading</h2>
+    <div class="hgrid" id="continueGrid"></div>
+  </div>
+
+  <div class="home-section">
+    <h2>Recommended for you</h2>
+    <div class="hgrid" id="recommendedGrid"></div>
+  </div>
+
+  <div class="home-section">
+    <h2>🔥 Trending</h2>
+    <div class="hgrid" id="trendingGrid"></div>
+  </div>
+
+  <div class="home-section">
+    <h2>Recently added</h2>
+    <div class="hgrid" id="recentAddedGrid"></div>
+  </div>
+
+  <div id="recentViewedSection" class="home-section" style="display:none;">
+    <h2>Recently viewed</h2>
+    <div class="hgrid" id="recentViewedGrid"></div>
+  </div>
+</section>
+
+<!-- ============ BROWSE ============ -->
+<section class="view" id="view-browse">
+  <div class="browse-layout">
+    <aside class="filter-panel">
+      <div class="filter-panel-head">
+        <h2>Smart Filters</h2>
+        <button class="btn-outline small" onclick="resetFilters()">Reset</button>
+      </div>
+      <div class="search-bar small">
+        <input id="q" type="text" placeholder="Search title or author…" oninput="render()">
+      </div>
+
+      <div class="facet">
+        <h3>🔥 Spice</h3>
+        <label class="sliderlabel">Max spice: <span id="spiceMaxLabel">Any</span>
+          <input type="range" id="spiceMax" min="0" max="4" step="1" value="4" oninput="onSliderChange('spice')">
+        </label>
+      </div>
+
+      <div class="facet">
+        <h3>⚠️ Content — tap to avoid</h3>
+        <div class="chiprow" id="avoidChips"></div>
+        <label class="sliderlabel">Max violence: <span id="violMaxLabel">Any</span>
+          <input type="range" id="violMax" min="0" max="4" step="1" value="4" oninput="onSliderChange('viol')">
+        </label>
+        <div class="chiprow" id="contentTagChips"></div>
+      </div>
+
+      <div class="facet"><h3>📖 Genre</h3><div class="chiprow" id="genreChips"></div></div>
+      <div class="facet"><h3>📝 Tropes</h3><div class="chiprow" id="tropeChips"></div></div>
+      <div class="facet"><h3>🌸 Relationships</h3><div class="chiprow" id="relationshipChips"></div></div>
+      <div class="facet"><h3>💭 Mood</h3><div class="chiprow" id="moodChips"></div></div>
+      <div class="facet"><h3>🧠 Other</h3><div class="chiprow" id="otherChips"></div></div>
+
+      <div class="facet">
+        <h3>Sort</h3>
+        <select id="sortBy" onchange="render()">
+          <option value="title-asc">Title A–Z</option>
+          <option value="title-desc">Title Z–A</option>
+          <option value="spice-asc">Spice: low → high</option>
+          <option value="spice-desc">Spice: high → low</option>
+          <option value="violence-asc">Violence: low → high</option>
+          <option value="violence-desc">Violence: high → low</option>
+        </select>
+      </div>
+
+      <div class="facet savedrow">
+        <button class="btn-solid small" onclick="saveFilterPreset()">💾 Save filter set</button>
+        <select id="presetSelect" onchange="loadFilterPreset()"><option value="">Load saved…</option></select>
+      </div>
+      <div class="facet savedrow">
+        <button class="btn-outline small" onclick="saveDefaultProfile()">⭐ Set as my default</button>
+      </div>
+    </aside>
+
+    <div class="browse-main">
+      <div class="books-head">
+        <h2>Browse Books</h2>
+        <span id="count" class="count"></span>
+        <button class="btn-outline small" onclick="rouletteBrowse()">🎲 Surprise me</button>
+        <button class="btn-outline small" onclick="openBlindDate()">🙈 Blind Date</button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MY LIBRARY ============ -->
+<section class="view" id="view-library">
+  <h1>My Library</h1>
+  <div class="stats-bar" id="statsBar"></div>
+  <div class="tabs sub-tabs" id="libraryTabs">
+    <button class="tab-btn active" data-lib="favorites" onclick="showLibraryTab('favorites')">⭐ Favorites</button>
+    <button class="tab-btn" data-lib="bookmarks" onclick="showLibraryTab('bookmarks')">🔖 Bookmarks</button>
+    <button class="tab-btn" data-lib="reading" onclick="showLibraryTab('reading')">📖 Reading</button>
+    <button class="tab-btn" data-lib="finished" onclick="showLibraryTab('finished')">✅ Finished</button>
+    <button class="tab-btn" data-lib="want" onclick="showLibraryTab('want')">📌 Want to Read</button>
+  </div>
+  <div class="grid" id="libraryGrid"></div>
+</section>
+
+<!-- Detail modal -->
+<div class="modal-backdrop" id="detailModal" onclick="if(event.target===this)closeDetail()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<!-- Blind Date modal -->
+<div class="modal-backdrop" id="blindModal" onclick="if(event.target===this)closeBlindDate()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeBlindDate()">✕</button>
+    <div id="blindBody"></div>
+  </div>
+</div>
+
+<!-- Trope Quiz modal -->
+<div class="modal-backdrop" id="quizModal" onclick="if(event.target===this)closeQuiz()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeQuiz()">✕</button>
+    <div id="quizBody"></div>
+  </div>
+</div>
+
+<!-- Add book modal -->
+<div class="modal-backdrop" id="addModal" onclick="if(event.target===this)closeAddForm()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAddForm()">✕</button>
+    <h3>Add a book</h3>
+    <form id="addForm" onsubmit="submitAddForm(event)">
+      <label>Title <input required id="f_title"></label>
+      <label>Author <input id="f_author" placeholder="—"></label>
+      <label>Cover image URL or file path <input id="f_cover" placeholder="covers/mybook.jpg (optional)"></label>
+      <div class="formgrid">
+        <label>Romance <input id="f_romance" placeholder="High / Present…"></label>
+        <label>Spice
+          <select id="f_spice"><option value="">—</option><option>None</option><option>Low</option><option>Moderate</option><option>High</option></select>
+        </label>
+        <label>Violence
+          <select id="f_violence"><option value="">—</option><option>None</option><option>Low</option><option>Moderate</option><option>High</option></select>
+        </label>
+        <label>Gore
+          <select id="f_gore"><option value="">—</option><option>None</option><option>Low</option><option>Moderate</option><option>High</option></select>
+        </label>
+        <label>Domestic violence <input id="f_dv" placeholder="None / Present / High…"></label>
+        <label>Cheating <input id="f_cheating" placeholder="No / Present…"></label>
+      </div>
+      <label>Genre / tropes / relationship / mood tags (comma separated) <input id="f_extra" placeholder="Dark Romance, Slow burn, Marriage…"></label>
+      <button class="btn-solid" type="submit">Add to library</button>
+    </form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
