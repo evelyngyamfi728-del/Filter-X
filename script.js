@@ -2271,6 +2271,10 @@ function render() {
         `${list.length} of ${books.length} books`
     );
 
+    const qElement = $("q");
+    const currentQuery = qElement ? qElement.value.trim() : "";
+    if (currentQuery) logSearchDebounced(currentQuery, list.length);
+
 
     grid.innerHTML = "";
 
@@ -2285,6 +2289,12 @@ function render() {
 
                 No books match those filters.
                 Try loosening one.
+
+                ${
+                    currentQuery
+                        ? `<button class="btn-solid small" style="margin-top:12px;" onclick="openRequestForm('${currentQuery.replace(/'/g, "&#39;")}')">📩 Request "${currentQuery}"</button>`
+                        : ""
+                }
             </div>
         `;
 
@@ -4149,7 +4159,123 @@ function contentWarnings(book) {
 
 
 /* =========================================================
-   39. DETAIL MODAL
+   38b. BOOK REQUESTS & SEARCH LOG (demand signal — local only)
+   ========================================================= */
+
+function loadRequests() {
+    const data = loadJSON("filterx_book_requests", []);
+    return Array.isArray(data) ? data : [];
+}
+
+function openRequestForm(prefillTitle) {
+    const modal = $("requestModal");
+    if (!modal) return;
+    const titleInput = $("r_title");
+    if (titleInput && prefillTitle) titleInput.value = prefillTitle;
+    modal.classList.add("open");
+}
+
+function closeRequestForm() {
+    const modal = $("requestModal");
+    if (modal) modal.classList.remove("open");
+    const form = $("requestForm");
+    if (form) form.reset();
+}
+
+function submitRequestForm(event) {
+    event.preventDefault();
+    const title = $("r_title") ? $("r_title").value.trim() : "";
+    const author = $("r_author") ? $("r_author").value.trim() : "";
+    const note = $("r_note") ? $("r_note").value.trim() : "";
+    if (!title) return;
+
+    const requests = loadRequests();
+    requests.push({
+        title,
+        author,
+        note,
+        date: localDateKey()
+    });
+    saveJSON("filterx_book_requests", requests);
+
+    closeRequestForm();
+    alert("Thanks! We've logged your request.");
+}
+
+function logSearch(query, resultCount) {
+    const q = String(query || "").trim();
+    if (!q) return;
+
+    const log = loadJSON("filterx_search_log", []);
+    const safeLog = Array.isArray(log) ? log : [];
+    safeLog.push({ query: q, resultCount, date: localDateKey() });
+    // keep the log from growing unbounded
+    const trimmed = safeLog.slice(-300);
+    saveJSON("filterx_search_log", trimmed);
+}
+
+let searchLogTimer = null;
+function logSearchDebounced(query, resultCount) {
+    clearTimeout(searchLogTimer);
+    searchLogTimer = setTimeout(() => logSearch(query, resultCount), 600);
+}
+
+/* Lightweight admin view — open from the browser console with viewFilterXFeedback() */
+function viewFilterXFeedback() {
+    const requests = loadRequests();
+    const log = loadJSON("filterx_search_log", []);
+    console.log(`📩 ${requests.length} book requests:`, requests);
+    console.log(`🔍 ${log.length} logged searches:`, log);
+    return { requests, searches: log };
+}
+
+
+/* =========================================================
+   39. SIMILAR BOOKS ("If you liked this, try…")
+   ========================================================= */
+
+function similarBooks(book, count) {
+
+    const tags =
+        new Set(book.extra || []);
+
+    const baseSpice =
+        lvl(book.spice);
+
+    const scored =
+        books
+            .filter(other => other !== book)
+            .map(other => {
+
+                let score = 0;
+
+                (other.extra || []).forEach(tag => {
+
+                    if (!tags.has(tag)) return;
+
+                    const cat = categoryOf(tag);
+
+                    score += (cat === "genre" || cat === "trope") ? 2 : 1;
+                });
+
+                const otherSpice = lvl(other.spice);
+
+                if (baseSpice !== null && otherSpice !== null) {
+                    score += Math.max(0, 1 - Math.abs(baseSpice - otherSpice) / 3);
+                }
+
+                return { book: other, score };
+            })
+            .filter(entry => entry.score > 0);
+
+    scored.sort((a, b) => b.score - a.score);
+
+    return scored.slice(0, count).map(entry => entry.book);
+}
+
+
+/* =========================================================
+   40. DETAIL MODAL
    ========================================================= */
 
 let currentDetailBook =
@@ -4436,6 +4562,12 @@ function openDetail(book) {
         >
             🖼️ Share this book
         </button>
+
+        <h3 style="margin-top:20px;">
+            💜 If you liked this, try…
+        </h3>
+
+        <div class="hgrid similar-row" id="similarRow"></div>
     `;
 
 
@@ -4476,6 +4608,29 @@ function openDetail(book) {
             cover,
             book
         );
+    }
+
+
+    const similarRow =
+        $("similarRow");
+
+
+    if (similarRow) {
+
+        const sims =
+            similarBooks(book, 4);
+
+        if (sims.length === 0) {
+
+            similarRow.innerHTML =
+                `<p class="detail-desc">No close matches yet — add more books to unlock suggestions.</p>`;
+
+        } else {
+
+            sims.forEach(other => {
+                similarRow.appendChild(createCard(other, true));
+            });
+        }
     }
 
 
@@ -4605,7 +4760,7 @@ function closeDetail() {
 
 
 /* =========================================================
-   40. ADD BOOK
+   41. ADD BOOK
    ========================================================= */
 
 function openAddForm() {
@@ -4767,7 +4922,7 @@ function submitAddForm(event) {
 
 
 /* =========================================================
-   41. FILTER PRESETS
+   42. FILTER PRESETS
    ========================================================= */
 
 function loadPresets() {
@@ -5127,7 +5282,7 @@ function loadFilterPreset() {
 
 
 /* =========================================================
-   42. DEFAULT PROFILE
+   43. DEFAULT PROFILE
    ========================================================= */
 
 function saveDefaultProfile() {
@@ -5259,7 +5414,7 @@ function applyDefaultProfile() {
 
 
 /* =========================================================
-   43. MODAL / KEYBOARD SAFETY
+   44. MODAL / KEYBOARD SAFETY
    ========================================================= */
 
 document.addEventListener(
@@ -5281,6 +5436,8 @@ document.addEventListener(
         closeAddForm();
 
         closeQuiz(false);
+
+        closeRequestForm();
     }
 );
 
@@ -5291,7 +5448,8 @@ document.addEventListener(
     "detailModal",
     "blindModal",
     "addModal",
-    "quizModal"
+    "quizModal",
+    "requestModal"
 ].forEach(id => {
 
     const modal = $(id);
@@ -5334,6 +5492,13 @@ document.addEventListener(
                 ) {
                     closeQuiz(false);
                 }
+
+                if (
+                    id ===
+                    "requestModal"
+                ) {
+                    closeRequestForm();
+                }
             }
         }
     );
@@ -5341,7 +5506,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   44. INITIALIZATION
+   45. INITIALIZATION
    ========================================================= */
 
 function initFilterX() {
@@ -5383,7 +5548,7 @@ function initFilterX() {
 
 
 /* =========================================================
-   45. START
+   46. START
    ========================================================= */
 
 if (
@@ -5399,7 +5564,7 @@ if (
 } else {
 
     initFilterX();
-    
+
 }
 
 
