@@ -4182,6 +4182,8 @@ function closeRequestForm() {
     if (form) form.reset();
 }
 
+const REQUEST_FORM_ENDPOINT = "https://formspree.io/f/mbgleqdy";
+
 function submitRequestForm(event) {
     event.preventDefault();
     const title = $("r_title") ? $("r_title").value.trim() : "";
@@ -4189,6 +4191,7 @@ function submitRequestForm(event) {
     const note = $("r_note") ? $("r_note").value.trim() : "";
     if (!title) return;
 
+    // keep a local copy too, as a backup you can check in-browser
     const requests = loadRequests();
     requests.push({
         title,
@@ -4198,8 +4201,30 @@ function submitRequestForm(event) {
     });
     saveJSON("filterx_book_requests", requests);
 
-    closeRequestForm();
-    alert("Thanks! We've logged your request.");
+    const submitBtn = event.target.querySelector("button[type=submit]");
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Sending…"; }
+
+    fetch(REQUEST_FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({ title, author, note, source: "Filter X — Request a book" })
+    })
+        .then(res => {
+            if (res.ok) {
+                closeRequestForm();
+                alert("Thanks! Your request has been sent.");
+            } else {
+                closeRequestForm();
+                alert("Thanks! We've saved your request locally (the live submission didn't go through, but it's not lost).");
+            }
+        })
+        .catch(() => {
+            closeRequestForm();
+            alert("Thanks! We've saved your request locally (couldn't reach the server, but it's not lost).");
+        })
+        .finally(() => {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Submit request"; }
+        });
 }
 
 function logSearch(query, resultCount) {
