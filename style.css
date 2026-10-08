@@ -248,3 +248,24 @@ h1,h2,h3{margin:0 0 8px;font-family:'Fraunces',Georgia,serif;font-weight:600;let
 
 /* spice word next to flame tag in detail view */
 .detail-spice-word{margin-left:6px;color:var(--muted);font-size:.8rem;font-weight:500;}
+
+
+/* reviews */
+#reviewForm label{display:flex;flex-direction:column;gap:4px;font-size:.82rem;color:var(--muted);margin-bottom:12px;font-weight:500;}
+#reviewForm input,#reviewForm select{padding:9px 11px;border-radius:10px;border:1.5px solid var(--line);font-size:.88rem;font-family:'Work Sans',sans-serif;background:var(--card);color:var(--ink);}
+#reviewForm input:focus,#reviewForm select:focus,#reviewForm textarea:focus{outline:none;border-color:var(--crimson);}
+.review{border-top:1px solid var(--line);padding:10px 0;font-size:.88rem;}
+.review-head{display:flex;justify-content:space-between;gap:8px;margin-bottom:4px;align-items:baseline;}
+.review-stars{color:var(--gold);letter-spacing:1px;}
+.review-name{font-weight:600;margin-left:4px;}
+.review-date{color:var(--muted);font-size:.75rem;white-space:nowrap;}
+.review p{margin:0;line-height:1.5;}
+
+/* about page */
+.about{max-width:680px;}
+.about h1{font-size:2.1rem;font-style:italic;margin-bottom:4px;}
+.about-lead{font-family:'Fraunces',serif;font-size:1.2rem;color:var(--crimson);margin:0 0 18px;font-style:italic;}
+.about h2{font-size:1.15rem;font-style:italic;margin-top:26px;}
+.about p,.about li{line-height:1.65;font-size:.95rem;}
+.about ul{padding-left:20px;margin:8px 0;}
+.about .btn-solid{margin-top:8px;}
