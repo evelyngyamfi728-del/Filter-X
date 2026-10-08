@@ -233,6 +233,7 @@ const BASE_BOOKS = [
         title: "Insatiable",
         author: "Leigh Rivers",
         isbn: "9780349448541",
+        altIsbns: ["9781638935469"],
         domesticViolence: "High",
         extra: [
             "Dark Romance",
@@ -244,6 +245,7 @@ const BASE_BOOKS = [
         title: "Voracious",
         author: "Leigh Rivers",
         isbn: "9780349448558",
+        altIsbns: ["9781638935476"],
         spice: "High",
         gore: "High",
         violence: "High",
@@ -314,6 +316,7 @@ const BASE_BOOKS = [
         title: "I Am Not Jessica Chen",
         author: "Ann Liang",
         isbn: "9781335523129",
+        altIsbns: ["9781335081100"],
         spice: "None",
         violence: "None",
         gore: "None",
@@ -332,6 +335,7 @@ const BASE_BOOKS = [
         title: "If You Could See the Sun",
         author: "Ann Liang",
         isbn: "9781335005984",
+        altIsbns: ["9781335915849"],
         spice: "None",
         violence: "Low",
         gore: "None",
@@ -349,6 +353,7 @@ const BASE_BOOKS = [
         title: "I Hope This Doesn't Find You",
         author: "Ann Liang",
         isbn: "9781338827170",
+        altIsbns: ["9781338827156"],
         violence: "Low",
         gore: "None",
         cheating: "No",
@@ -457,6 +462,7 @@ const BASE_BOOKS = [
         title: "Purple Hibiscus",
         author: "Chimamanda Ngozi Adichie",
         isbn: "9781616202415",
+        altIsbns: ["9781400076949"],
         domesticViolence: "Present",
         violence: "Moderate-High",
         gore: "None",
@@ -536,6 +542,7 @@ const BASE_BOOKS = [
         title: "My Fault",
         author: "Mercedes Ron",
         isbn: "9781728291413",
+        altIsbns: ["9781728290737"],
         romance: "Present",
         spice: "Moderate",
         cheating: "No",
@@ -762,6 +769,93 @@ const BASE_BOOKS = [
             "Marriage",
             "She stops chasing him"
         ]
+    },
+
+    {
+        title: "The Breakup Bible",
+        author: "Melissa Kantor",
+        spice: "None",
+        violence: "Low",
+        gore: "None",
+        cheating: "Present",
+        extra: [
+            "Fluffy Romance",
+            "Heartbreak",
+            "Highschool",
+            "Healing",
+            "Self discovery",
+            "First love"
+        ]
+    },
+
+    {
+        title: "His Darling Freckles",
+        author: "Alesca Kayser",
+        isbn: "9781969076008",
+        spice: "None",
+        violence: "Low",
+        gore: "None",
+        extra: [
+            "Fluffy Romance",
+            "Heartbreak",
+            "First love",
+            "Friends to lovers",
+            "College",
+            "Trauma",
+            "Friendship"
+        ]
+    },
+
+    {
+        title: "Saving 6",
+        author: "Chloe Walsh",
+        spice: "Moderate",
+        violence: "High",
+        domesticViolence: "Present",
+        extra: [
+            "Romance",
+            "Profanity",
+            "Family dysfunction",
+            "Drug abuse",
+            "Pregnancy",
+            "Trauma",
+            "Highschool",
+            "Friendship",
+            "Coming of age"
+        ]
+    },
+
+    {
+        title: "Redeeming 6",
+        author: "Chloe Walsh",
+        spice: "Moderate",
+        violence: "High",
+        domesticViolence: "Present",
+        extra: [
+            "Romance",
+            "Sexual violence",
+            "Mental health",
+            "Family dysfunction",
+            "Toxic relationship",
+            "Healing"
+        ]
+    },
+
+    {
+        title: "Releasing 10",
+        author: "Chloe Walsh",
+        violence: "High",
+        gore: "Moderate",
+        cheating: "Present",
+        extra: [
+            "Romance",
+            "Sexual abuse",
+            "Bipolar disorder",
+            "Pregnancy",
+            "Miscarriage",
+            "Trauma",
+            "Family dysfunction"
+        ]
     }
 ];
 
@@ -798,6 +892,7 @@ const CATEGORY_MAP = {
     "Amnesia": "trope",
     "She stops chasing him": "trope",
     "Age gap": "trope",
+    "First love": "trope",
 
     /* RELATIONSHIP */
     "Marriage": "relationship",
@@ -841,6 +936,8 @@ const CATEGORY_MAP = {
     "High profanity": "content",
     "Revenge": "content",
     "Family betrayal": "content",
+    "Sexual violence": "content",
+    "Bipolar disorder": "content",
     "Substance abuse (low)": "content",
 
     /* MOOD */
@@ -858,6 +955,7 @@ const CATEGORY_MAP = {
     "Mental health": "mood",
     "Trauma": "mood",
     "Angst": "mood",
+    "Healing": "mood",
 
     /* OTHER */
     "College": "other",
@@ -1064,6 +1162,43 @@ function markViewed(book) {
    8. VIEW SWITCHING
    ========================================================= */
 
+/* =========================================================
+   7b. VISITOR ANALYTICS (GoatCounter — privacy-friendly, no cookies)
+   Paste your GoatCounter code between the quotes below.
+   e.g. if your dashboard is https://filterx.goatcounter.com
+   then the code is: filterx
+   ========================================================= */
+
+const GOATCOUNTER_CODE = "filterx";
+
+function initAnalytics() {
+    if (!GOATCOUNTER_CODE) return;
+    if (location.protocol === "file:") return;
+    /* the official snippet in index.html already loads it */
+    if (document.querySelector("script[data-goatcounter]")) return;
+
+    const tag = document.createElement("script");
+    tag.async = true;
+    tag.dataset.goatcounter =
+        `https://${GOATCOUNTER_CODE}.goatcounter.com/count`;
+    tag.src = "https://gc.zgo.at/count.js";
+    document.head.appendChild(tag);
+}
+
+/* Record a named event, e.g. track("book-open/It Ends With Us") */
+function track(name) {
+    try {
+        if (!GOATCOUNTER_CODE) return;
+        if (!window.goatcounter || !window.goatcounter.count) return;
+        window.goatcounter.count({
+            path: String(name).slice(0, 120),
+            title: String(name).slice(0, 120),
+            event: true
+        });
+    } catch (error) { /* analytics must never break the app */ }
+}
+
+
 function showView(name) {
 
     document
@@ -1080,6 +1215,8 @@ function showView(name) {
     }
 
     target.classList.add("active");
+
+    track("view/" + name);
 
     document
         .querySelectorAll(".tab-btn[data-view]")
@@ -1674,203 +1811,117 @@ function sortBooks(list) {
    ========================================================= */
 
 function openLibraryCoverUrl(isbn) {
-
-    return `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
+    return `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg?default=false`;
 }
 
+function allIsbns(book) {
+    return [book.isbn, ...(book.altIsbns || [])].filter(Boolean);
+}
 
-const coverCache =
-    loadJSON(
-        "filterx_cover_cache",
-        {}
-    );
-
+/* v2 key: drops old cache entries where a failed lookup was saved forever */
+const COVER_CACHE_KEY = "filterx_cover_cache_v2";
+const coverCache = loadJSON(COVER_CACHE_KEY, {});
 
 function saveCoverCache() {
-    saveJSON(
-        "filterx_cover_cache",
-        coverCache
-    );
+    saveJSON(COVER_CACHE_KEY, coverCache);
 }
 
+function probeImage(url) {
+    return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve(img.naturalWidth > 1 ? url : null);
+        img.onerror = () => resolve(null);
+        img.src = url;
+    });
+}
 
-async function fetchCoverFromGoogle(book) {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-    const key = bookKey(book);
+/* online lookups run one at a time so we don't get rate-limited */
+let apiQueue = Promise.resolve();
+function queued(task) {
+    const run = apiQueue.then(task, task);
+    apiQueue = run.then(() => sleep(250), () => sleep(250));
+    return run;
+}
 
-    if (
-        Object.prototype.hasOwnProperty.call(
-            coverCache,
-            key
-        )
-    ) {
-        return coverCache[key];
-    }
-
-
+async function coverFromOpenLibrarySearch(book) {
     try {
-
-        let query =
-            `intitle:${book.title}`;
-
-        if (
-            book.author &&
-            book.author !== "—"
-        ) {
-            query +=
-                ` inauthor:${book.author}`;
-        }
-
-
-        const response = await fetch(
-            `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=1`
-        );
-
-
-        if (!response.ok) {
-            throw new Error("Google Books request failed");
-        }
-
-
-        const data =
-            await response.json();
-
-
-        let imageLinks =
-            data.items &&
-            data.items[0] &&
-            data.items[0].volumeInfo &&
-            data.items[0].volumeInfo.imageLinks;
-
-
-        if (!imageLinks) {
-
-            const fallbackQuery =
-                `${book.title} ${book.author || ""}`;
-
-
-            const fallbackResponse =
-                await fetch(
-                    `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(fallbackQuery)}&maxResults=1`
-                );
-
-
-            if (fallbackResponse.ok) {
-
-                const fallbackData =
-                    await fallbackResponse.json();
-
-                imageLinks =
-                    fallbackData.items &&
-                    fallbackData.items[0] &&
-                    fallbackData.items[0].volumeInfo &&
-                    fallbackData.items[0].volumeInfo.imageLinks;
-            }
-        }
-
-
-        let url =
-            imageLinks
-                ? (
-                    imageLinks.thumbnail ||
-                    imageLinks.smallThumbnail ||
-                    null
-                )
-                : null;
-
-
-        if (url) {
-            url = url.replace(
-                /^http:/,
-                "https:"
-            );
-        }
-
-
-        coverCache[key] =
-            url || null;
-
-        saveCoverCache();
-
-        return coverCache[key];
-
+        const params = new URLSearchParams({
+            title: book.title,
+            limit: "5",
+            fields: "cover_i,title"
+        });
+        if (book.author && book.author !== "—") params.set("author", book.author);
+        const res = await fetch("https://openlibrary.org/search.json?" + params);
+        if (!res.ok) return null;
+        const data = await res.json();
+        const hit = (data.docs || []).find(d => d.cover_i);
+        if (!hit) return null;
+        return await probeImage(`https://covers.openlibrary.org/b/id/${hit.cover_i}-M.jpg`);
     } catch (error) {
-
-        coverCache[key] = null;
-
-        saveCoverCache();
-
         return null;
     }
 }
 
+async function coverFromGoogle(book) {
+    const queries = allIsbns(book).map(i => "isbn:" + i);
+    let titleQuery = `intitle:${book.title}`;
+    if (book.author && book.author !== "—") titleQuery += ` inauthor:${book.author}`;
+    queries.push(titleQuery);
 
-function loadBookCover(book, onFound) {
+    for (const query of queries) {
+        try {
+            const res = await fetch(
+                `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=1`
+            );
+            if (!res.ok) continue;
+            const data = await res.json();
+            const links = data.items?.[0]?.volumeInfo?.imageLinks;
+            const url = links && (links.thumbnail || links.smallThumbnail);
+            if (url) return url.replace(/^http:/, "https:");
+        } catch (error) { /* try next query */ }
+    }
+    return null;
+}
 
-    const tryGoogleFallback = () => {
-
-        fetchCoverFromGoogle(book)
-            .then(url => {
-
-                if (url && typeof onFound === "function") {
-                    onFound(url);
-                }
-            });
-    };
-
-
-    const tryIsbnThenGoogle = () => {
-
-        if (!book.isbn) {
-            tryGoogleFallback();
-            return;
-        }
-
-
-        const probe = new Image();
-
-        probe.onload = () => {
-
-            if (probe.naturalWidth > 1) {
-
-                onFound(
-                    openLibraryCoverUrl(book.isbn)
-                );
-
-            } else {
-
-                tryGoogleFallback();
-            }
-        };
-
-
-        probe.onerror =
-            tryGoogleFallback;
-
-
-        probe.src =
-            openLibraryCoverUrl(book.isbn);
-    };
-
+async function resolveCover(book) {
+    const key = bookKey(book);
 
     if (book.cover) {
-
-        const own = new Image();
-
-        own.onload = () => {
-            onFound(book.cover);
-        };
-
-        own.onerror =
-            tryIsbnThenGoogle;
-
-        own.src = book.cover;
-
-        return;
+        const own = await probeImage(book.cover);
+        if (own) return own;
     }
 
+    if (coverCache[key]) return coverCache[key];
 
-    tryIsbnThenGoogle();
+    for (const isbn of allIsbns(book)) {
+        const url = await probeImage(openLibraryCoverUrl(isbn));
+        if (url) {
+            coverCache[key] = url;
+            saveCoverCache();
+            return url;
+        }
+    }
+
+    const found = await queued(async () =>
+        (await coverFromOpenLibrarySearch(book)) || (await coverFromGoogle(book))
+    );
+
+    /* only remember successes, so a failed lookup is retried next visit */
+    if (found) {
+        coverCache[key] = found;
+        saveCoverCache();
+    }
+    return found;
+}
+
+function loadBookCover(book, onFound) {
+    resolveCover(book).then(url => {
+        if (url && typeof onFound === "function") onFound(url);
+    });
 }
 
 
@@ -2077,9 +2128,9 @@ function createCard(book, compact) {
 
             </div>
 
-            <div class="t">${book.title}</div>
+            <div class="t">${escapeHTML(book.title)}</div>
 
-            <div class="a">${book.author || ""}</div>
+            <div class="a">${escapeHTML(book.author || "")}</div>
 
         </div>
 
@@ -2092,7 +2143,7 @@ function createCard(book, compact) {
 
                 <div class="card-sub">
                     ${
-                        genreTags.join(" · ") ||
+                        genreTags.map(escapeHTML).join(" · ") ||
                         "Romance"
                     }
                 </div>
@@ -2292,7 +2343,7 @@ function render() {
 
                 ${
                     currentQuery
-                        ? `<button class="btn-solid small" style="margin-top:12px;" onclick="openRequestForm('${currentQuery.replace(/'/g, "&#39;")}')">📩 Request "${currentQuery}"</button>`
+                        ? `<button class="btn-solid small" style="margin-top:12px;" onclick="openRequestForm('${currentQuery.replace(/'/g, "&#39;")}')">📩 Request "${escapeHTML(currentQuery)}"</button>`
                         : ""
                 }
             </div>
@@ -2316,6 +2367,7 @@ function render() {
    ========================================================= */
 
 function rouletteBrowse() {
+    track("roulette");
 
     const list =
         books.filter(passes);
@@ -2352,6 +2404,7 @@ let blindPick = null;
 
 
 function openBlindDate() {
+    track("blind-date");
 
     const filtered =
         books.filter(passes);
@@ -2445,28 +2498,28 @@ function openBlindDate() {
         <div class="detail-row">
             <b>Genre</b>
             <span>
-                ${genres.join(", ") || "—"}
+                ${genres.map(escapeHTML).join(", ") || "—"}
             </span>
         </div>
 
         <div class="detail-row">
             <b>Tropes</b>
             <span>
-                ${tropes.join(", ") || "—"}
+                ${tropes.map(escapeHTML).join(", ") || "—"}
             </span>
         </div>
 
         <div class="detail-row">
             <b>Relationship themes</b>
             <span>
-                ${relationships.join(", ") || "—"}
+                ${relationships.map(escapeHTML).join(", ") || "—"}
             </span>
         </div>
 
         <div class="detail-row">
             <b>Mood</b>
             <span>
-                ${mood.join(", ") || "—"}
+                ${mood.map(escapeHTML).join(", ") || "—"}
             </span>
         </div>
 
@@ -2481,7 +2534,7 @@ function openBlindDate() {
                         ${warnings
                             .map(
                                 warning =>
-                                    `<span class="tag warn">${warning}</span>`
+                                    `<span class="tag warn">${escapeHTML(warning)}</span>`
                             )
                             .join("")}
                     </div>
@@ -2776,6 +2829,7 @@ function wrapText(
 
 
 function openShareCard(book) {
+    if (book) track("share-card/" + book.title);
 
     if (!book) return;
 
@@ -3501,6 +3555,7 @@ function answerQuiz(index) {
 
 
 function finishQuiz() {
+    track("quiz-finished");
 
     saveJSON(
         "filterx_quiz_done",
@@ -4191,6 +4246,8 @@ function submitRequestForm(event) {
     const note = $("r_note") ? $("r_note").value.trim() : "";
     if (!title) return;
 
+    track("book-request/" + title.slice(0, 80));
+
     // keep a local copy too, as a backup you can check in-browser
     const requests = loadRequests();
     requests.push({
@@ -4233,6 +4290,7 @@ function logSearch(query, resultCount) {
 
     const log = loadJSON("filterx_search_log", []);
     const safeLog = Array.isArray(log) ? log : [];
+    track((resultCount === 0 ? "search-no-results/" : "search/") + q.toLowerCase().slice(0, 60));
     safeLog.push({ query: q, resultCount, date: localDateKey() });
     // keep the log from growing unbounded
     const trimmed = safeLog.slice(-300);
@@ -4318,6 +4376,8 @@ function openDetail(book) {
 
     markViewed(book);
 
+    track("book-open/" + book.title);
+
 
     const personalData =
         getPersonal(book);
@@ -4368,18 +4428,18 @@ function openDetail(book) {
             data-detail-cover
         >
             <span class="detail-cover-placeholder">
-                ${book.title}
+                ${escapeHTML(book.title)}
             </span>
         </div>
 
         <h3>
-            ${book.title}
+            ${escapeHTML(book.title)}
         </h3>
 
         <div class="detail-row">
             <b>Author</b>
             <span>
-                ${book.author || "—"}
+                ${escapeHTML(book.author || "—")}
             </span>
         </div>
 
@@ -4513,7 +4573,7 @@ function openDetail(book) {
             <b>Emotional intensity</b>
 
             <span>
-                ${mood.join(", ") || "—"}
+                ${mood.map(escapeHTML).join(", ") || "—"}
             </span>
         </div>
 
@@ -4522,7 +4582,7 @@ function openDetail(book) {
             <b>Tropes</b>
 
             <span>
-                ${tropes.join(", ") || "—"}
+                ${tropes.map(escapeHTML).join(", ") || "—"}
             </span>
         </div>
 
@@ -4532,7 +4592,7 @@ function openDetail(book) {
 
             <span>
                 ${
-                    relationships.join(", ") ||
+                    relationships.map(escapeHTML).join(", ") ||
                     "—"
                 }
             </span>
@@ -4551,7 +4611,7 @@ function openDetail(book) {
                         ${warnings
                             .map(
                                 warning =>
-                                    `<span class="tag warn">${warning}</span>`
+                                    `<span class="tag warn">${escapeHTML(warning)}</span>`
                             )
                             .join("")}
                     </div>
@@ -4576,7 +4636,7 @@ function openDetail(book) {
             id="detailNotes"
             class="notes-box"
             placeholder="Thoughts, spoilers…"
-        >${personalData.notes || ""}</textarea>
+        >${escapeHTML(personalData.notes || "")}</textarea>
 
 
         <button
@@ -4593,6 +4653,21 @@ function openDetail(book) {
         </h3>
 
         <div class="hgrid similar-row" id="similarRow"></div>
+
+        ${
+            isCustomBook(book)
+                ? `
+                    <button
+                        class="btn-outline small"
+                        style="margin-top:16px;width:100%;color:var(--crimson);border-color:var(--crimson);"
+                        onclick="deleteCustomBook(currentDetailBook)"
+                        type="button"
+                    >
+                        🗑️ Remove this book
+                    </button>
+                `
+                : ""
+        }
     `;
 
 
@@ -4787,6 +4862,36 @@ function closeDetail() {
 /* =========================================================
    41. ADD BOOK
    ========================================================= */
+
+function isCustomBook(book) {
+    return loadCustomBooks().some(
+        b => bookKey(b) === bookKey(book)
+    );
+}
+
+function deleteCustomBook(book) {
+    if (!confirm(`Remove "${book.title}" from Filter X? This can't be undone.`)) {
+        return;
+    }
+
+    const custom = loadCustomBooks().filter(
+        b => bookKey(b) !== bookKey(book)
+    );
+    saveCustomBooks(custom);
+
+    // also clean up any personal data tied to it (favorites, notes, status)
+    const key = bookKey(book);
+    if (personal[key]) {
+        delete personal[key];
+        saveJSON("filterx_personal", personal);
+    }
+
+    books = BASE_BOOKS.concat(custom);
+
+    closeDetail();
+    buildFacetChips();
+    refreshCurrentView();
+}
 
 function openAddForm() {
 
@@ -5535,6 +5640,9 @@ document.addEventListener(
    ========================================================= */
 
 function initFilterX() {
+
+    initAnalytics();
+
 
     /* Theme */
 
