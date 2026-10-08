@@ -790,7 +790,7 @@ const BASE_BOOKS = [
 
     {
         title: "His Darling Freckles",
-        author: "Alesca Kayser",
+        author: "Alecsa Kayser",
         isbn: "9781969076008",
         spice: "None",
         violence: "Low",
@@ -1099,6 +1099,25 @@ let personal = loadJSON("filterx_personal", {});
 if (!personal || typeof personal !== "object") {
     personal = {};
 }
+
+
+/* When a book's title/author is corrected, carry over saved favorites,
+   status and notes from the old name to the new one. */
+const PERSONAL_KEY_FIXES = {
+    "His Darling Freckles|Alesca Kayser": "His Darling Freckles|Alecsa Kayser"
+};
+
+(function migratePersonalKeys() {
+    let changed = false;
+    Object.entries(PERSONAL_KEY_FIXES).forEach(([oldKey, newKey]) => {
+        if (personal[oldKey]) {
+            if (!personal[newKey]) personal[newKey] = personal[oldKey];
+            delete personal[oldKey];
+            changed = true;
+        }
+    });
+    if (changed) saveJSON("filterx_personal", personal);
+})();
 
 
 function getPersonal(book) {
@@ -4314,6 +4333,124 @@ function viewFilterXFeedback() {
 
 
 /* =========================================================
+   38c. READER REVIEWS
+   Readers send reviews by email (Formspree). You check them, then
+   paste the good ones here so everyone can see them.
+   Format:  "Book Title|Author": [ { name, rating, text, date } ]
+   ========================================================= */
+
+const APPROVED_REVIEWS = {
+    /*
+    "It Ends With Us|Colleen Hoover": [
+        { name: "Ama", rating: 5, text: "Heavy but worth it.", date: "2026-10-12" }
+    ],
+    */
+};
+
+function renderReviews(book) {
+
+    const list = APPROVED_REVIEWS[bookKey(book)] || [];
+
+    const clamp = n => Math.max(0, Math.min(5, Math.round(Number(n)) || 0));
+
+    let summary = "";
+
+    if (list.length) {
+        const avg = list.reduce((sum, r) => sum + clamp(r.rating), 0) / list.length;
+        summary = `<span class="spoiler-hint">${avg.toFixed(1)} / 5 · ${list.length} review${list.length === 1 ? "" : "s"}</span>`;
+    }
+
+    const items = list.map(r => {
+        const stars = clamp(r.rating);
+        return `
+            <div class="review">
+                <div class="review-head">
+                    <span>
+                        <span class="review-stars">${"★".repeat(stars)}${"☆".repeat(5 - stars)}</span>
+                        <span class="review-name">${escapeHTML(r.name || "A reader")}</span>
+                    </span>
+                    <span class="review-date">${escapeHTML(r.date || "")}</span>
+                </div>
+                <p>${escapeHTML(r.text || "")}</p>
+            </div>
+        `;
+    }).join("");
+
+    return `
+        <h3 style="margin-top:20px;">⭐ Reader reviews ${summary}</h3>
+        ${items || `<p class="detail-desc">No reviews yet. Be the first!</p>`}
+        <button class="btn-outline small" style="margin-top:8px;width:100%;" onclick="openReviewForm(currentDetailBook)" type="button">✍️ Write a review</button>
+    `;
+}
+
+let currentReviewBook = null;
+
+function openReviewForm(book) {
+    if (!book) return;
+    currentReviewBook = book;
+    setText("reviewBookName", `${book.title}${book.author && book.author !== "—" ? " — " + book.author : ""}`);
+    const modal = $("reviewModal");
+    if (modal) modal.classList.add("open");
+}
+
+function closeReviewForm() {
+    const modal = $("reviewModal");
+    if (modal) modal.classList.remove("open");
+    const form = $("reviewForm");
+    if (form) form.reset();
+}
+
+function submitReviewForm(event) {
+    event.preventDefault();
+
+    const book = currentReviewBook;
+    if (!book) return;
+
+    const rating = $("rv_rating") ? $("rv_rating").value : "";
+    const name = $("rv_name") ? $("rv_name").value.trim() : "";
+    const text = $("rv_text") ? $("rv_text").value.trim() : "";
+    if (!rating || !text) return;
+
+    const submitBtn = event.target.querySelector("button[type=submit]");
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Sending…"; }
+
+    fetch(REQUEST_FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({
+            _subject: "Filter X review: " + book.title,
+            type: "review",
+            bookKey: bookKey(book),
+            title: book.title,
+            author: book.author || "",
+            rating,
+            name,
+            review: text
+        })
+    })
+        .then(res => {
+            if (res.ok) {
+                track("review-submitted/" + book.title);
+                closeReviewForm();
+                alert("Thank you! Your review was sent. It will appear once it has been checked.");
+            } else {
+                alert("Sorry, your review didn't send. Please try again.");
+            }
+        })
+        .catch(() => {
+            alert("Sorry, your review didn't send. Please check your connection and try again.");
+        })
+        .finally(() => {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Send review"; }
+        });
+}
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeReviewForm();
+});
+
+
+/* =========================================================
    39. SIMILAR BOOKS ("If you liked this, try…")
    ========================================================= */
 
@@ -4647,6 +4784,8 @@ function openDetail(book) {
         >
             🖼️ Share this book
         </button>
+
+        ${renderReviews(book)}
 
         <h3 style="margin-top:20px;">
             💜 If you liked this, try…
