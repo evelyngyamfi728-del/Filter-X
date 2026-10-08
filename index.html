@@ -19,6 +19,7 @@
     <button class="tab-btn active" data-view="home" onclick="showView('home')">Home</button>
     <button class="tab-btn" data-view="browse" onclick="showView('browse')">Browse</button>
     <button class="tab-btn" data-view="library" onclick="showView('library')">My Library</button>
+    <button class="tab-btn" data-view="about" onclick="showView('about')">About</button>
   </nav>
   <button class="icon-btn theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle spicy dark mode">🌙</button>
   <button class="btn-solid small" onclick="openAddForm()">+ Add a book</button>
@@ -173,6 +174,63 @@
   <div class="modal">
     <button class="modal-close" onclick="closeQuiz()">✕</button>
     <div id="quizBody"></div>
+  </div>
+</div>
+
+<!-- About page -->
+<section class="view" id="view-about">
+  <div class="about">
+    <h1>About Filter X</h1>
+    <p class="about-lead">Know what's inside a book before you read it.</p>
+
+    <h2>What is Filter X?</h2>
+    <p>Filter X is a book guide for readers who like to choose carefully. For each book you can see its spice level, how much violence it has, and content warnings such as cheating, domestic violence or gore, along with its tropes and mood. Then you can filter, so you only see books that suit you.</p>
+
+    <h2>How to use it</h2>
+    <ul>
+      <li><b>Browse</b> to filter by spice, violence, tropes and things you want to avoid.</li>
+      <li>The <b>flames</b> show spice: more flames means more heat.</li>
+      <li>Try <b>Surprise me</b> or <b>Blind Date</b> to discover a book without seeing its title first.</li>
+      <li>Save books in <b>My Library</b> as favorites, bookmarks, or what you're reading.</li>
+      <li>Open any book to read its details, write a review, or add a private note.</li>
+    </ul>
+
+    <h2>How accurate is it?</h2>
+    <p>Ratings and warnings are put together by hand and may be incomplete or occasionally wrong. Everyone's comfort level is different, so please treat them as a guide, not a guarantee. If you spot a mistake, tell us in a review or through "Request a book".</p>
+
+    <h2>Your privacy</h2>
+    <p>Your favorites, bookmarks, reading status and private notes stay on your own device. We can't see them. We count visits and popular searches with a privacy-friendly tool that uses no cookies and collects no personal details. If you send us a book request or a review, we receive what you type in it.</p>
+
+    <h2>Filter X is in beta</h2>
+    <p>We're starting with a small library and growing it based on what readers ask for. Can't find your book?</p>
+    <button class="btn-solid" onclick="openRequestForm()">📩 Request a book</button>
+  </div>
+</section>
+
+<!-- Review modal -->
+<div class="modal-backdrop" id="reviewModal" style="z-index:60" onclick="if(event.target===this)closeReviewForm()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeReviewForm()">✕</button>
+    <h3>Write a review</h3>
+    <p class="detail-desc" id="reviewBookName"></p>
+    <form id="reviewForm" onsubmit="submitReviewForm(event)">
+      <label>Your rating
+        <select id="rv_rating" required>
+          <option value="">Choose…</option>
+          <option value="5">★★★★★ Loved it</option>
+          <option value="4">★★★★ Really liked it</option>
+          <option value="3">★★★ It was okay</option>
+          <option value="2">★★ Not for me</option>
+          <option value="1">★ Disliked it</option>
+        </select>
+      </label>
+      <label>Your name (optional) <input id="rv_name" maxlength="40" placeholder="e.g. Ama"></label>
+      <label>Your review
+        <textarea id="rv_text" class="notes-box" required maxlength="1000" rows="5" placeholder="What did you think? Mention anything other readers should know before reading."></textarea>
+      </label>
+      <p class="detail-desc">Reviews are checked before they appear on the site.</p>
+      <button class="btn-solid" type="submit">Send review</button>
+    </form>
   </div>
 </div>
 
