@@ -856,6 +856,200 @@ const BASE_BOOKS = [
             "Trauma",
             "Family dysfunction"
         ]
+    },
+
+    {
+        title: "Reckless",
+        author: "Elsie Silver",
+        isbn: "9780349437729",
+        spice: "Moderate",
+        violence: "Low",
+        gore: "None",
+        extra: [
+            "Romance",
+            "One night stand",
+            "Secret baby",
+            "Cowboy",
+            "He falls first",
+            "Family conflict",
+            "Self discovery",
+            "Healing",
+            "Grumpy female lead"
+        ]
+    },
+
+    {
+        title: "Powerless",
+        author: "Elsie Silver",
+        isbn: "9780349437705",
+        spice: "Moderate",
+        violence: "Low",
+        gore: "None",
+        extra: [
+            "Romance",
+            "Cowboy",
+            "Childhood sweethearts",
+            "Friends to lovers",
+            "Runaway bride",
+            "Fluffy Romance",
+            "Self discovery",
+            "Hockey player",
+            "Romantic tension"
+        ]
+    },
+
+    {
+        title: "Heartless",
+        author: "Elsie Silver",
+        isbn: "9780349437682",
+        spice: "Moderate",
+        violence: "Low",
+        gore: "None",
+        extra: [
+            "Cowboy",
+            "Romance",
+            "Grumpy male lead",
+            "Single parent",
+            "Nanny romance",
+            "Age gap",
+            "She falls first",
+            "Girl friendships"
+        ]
+    },
+
+    {
+        title: "Flawless",
+        author: "Elsie Silver",
+        isbn: "9780349437675",
+        spice: "Moderate",
+        extra: [
+            "Cowboy",
+            "Forced proximity",
+            "Enemies to lovers",
+            "Workplace romance",
+            "Romance",
+            "Romantic tension"
+        ]
+    },
+
+    {
+        title: "Lucky Hit",
+        author: "Hannah Cowan",
+        isbn: "9781405966252",
+        spice: "Moderate",
+        violence: "Low",
+        gore: "None",
+        cheating: "Present",
+        extra: [
+            "Fluffy Romance",
+            "Family conflict",
+            "University",
+            "Strangers to lovers"
+        ]
+    },
+
+    {
+        title: "That Sik Luv",
+        author: "Jescie Hall",
+        isbn: "9798378326655",
+        spice: "High",
+        violence: "Very High",
+        gore: "High",
+        extra: [
+            "Dark Romance",
+            "Dubious consent",
+            "Bdsm",
+            "Murder"
+        ]
+    },
+
+    {
+        title: "The Unwanted Marriage",
+        author: "Catharina Maura",
+        isbn: "9781464227158",
+        altIsbns: ["9781464252686", "9781464233333"],
+        spice: "Moderate",
+        violence: "Moderate",
+        gore: "None",
+        cheating: "No",
+        extra: [
+            "Romance",
+            "Arranged marriage",
+            "Family conflict",
+            "Girl friendships",
+            "Slow burn",
+            "Billionaire"
+        ]
+    },
+
+    {
+        title: "Tattered",
+        author: "Devney Perry",
+        isbn: "9780998358376",
+        violence: "Low",
+        gore: "None",
+        cheating: "No",
+        extra: [
+            "Romance",
+            "One night stand",
+            "Pregnancy",
+            "Secret baby",
+            "Single parent",
+            "Second Chance"
+        ]
+    },
+
+    {
+        title: "The Secret Fiancée",
+        author: "Catharina Maura",
+        spice: "Moderate",
+        extra: [
+            "Romance",
+            "Age gap",
+            "Workplace romance",
+            "Billionaire",
+            "Arranged marriage",
+            "Angst",
+            "Romantic tension"
+        ]
+    },
+
+    {
+        title: "The Devious Husband",
+        author: "Catharina Maura",
+        isbn: "9781464227189",
+        altIsbns: ["9781464233364"],
+        spice: "Moderate",
+        violence: "Low",
+        gore: "None",
+        extra: [
+            "Romance",
+            "Marriage of convenience",
+            "Forced proximity",
+            "Girl friendships",
+            "Corporate espionage",
+            "Enemies to lovers",
+            "He falls first"
+        ]
+    },
+
+    {
+        title: "Bittersweet Memories",
+        author: "—",
+        spice: "High",
+        violence: "Moderate",
+        gore: "None",
+        extra: [
+            "Romance",
+            "Forbidden romance",
+            "Amnesia",
+            "Second Chance",
+            "Friends to lovers",
+            "He falls first",
+            "Possessive male lead",
+            "Trauma",
+            "Family conflict"
+        ]
     }
 ];
 
@@ -893,11 +1087,27 @@ const CATEGORY_MAP = {
     "She stops chasing him": "trope",
     "Age gap": "trope",
     "First love": "trope",
+    "One night stand": "trope",
+    "Secret baby": "trope",
+    "Cowboy": "trope",
+    "He falls first": "trope",
+    "She falls first": "trope",
+    "Grumpy female lead": "trope",
+    "Grumpy male lead": "trope",
+    "Childhood sweethearts": "trope",
+    "Runaway bride": "trope",
+    "Hockey player": "trope",
+    "Nanny romance": "trope",
+    "Forced proximity": "trope",
+    "Strangers to lovers": "trope",
+    "Arranged marriage": "trope",
+    "Marriage of convenience": "trope",
 
     /* RELATIONSHIP */
     "Marriage": "relationship",
     "Pregnancy": "relationship",
     "Parenthood": "relationship",
+    "Single parent": "relationship",
     "Divorce": "relationship",
     "Friendship": "relationship",
     "Girl friendships": "relationship",
@@ -956,6 +1166,7 @@ const CATEGORY_MAP = {
     "Trauma": "mood",
     "Angst": "mood",
     "Healing": "mood",
+    "Romantic tension": "mood",
 
     /* OTHER */
     "College": "other",
@@ -979,6 +1190,7 @@ const CATEGORY_MAP = {
     "Ancient China": "other",
     "Ruthless female lead": "other",
     "Billionaire": "other",
+    "Corporate espionage": "other",
     "Illegal racing": "other",
     "Family conflict": "other",
     "Step siblings": "other"
@@ -1217,6 +1429,40 @@ function track(name) {
     } catch (error) { /* analytics must never break the app */ }
 }
 
+
+/* ---------- phone: collapsible filter panel ---------- */
+
+function countActiveFilters() {
+    let n = 0;
+    const spice = $("spiceMax");
+    const viol = $("violMax");
+    const q = $("q");
+    if (spice && parseFloat(spice.value) < 4) n++;
+    if (viol && parseFloat(viol.value) < 4) n++;
+    if (q && q.value.trim()) n++;
+    n += Object.values(avoidState).filter(Boolean).length;
+    n += avoidTags.size;
+    Object.values(includeTags).forEach(set => { n += set.size; });
+    return n;
+}
+
+function updateFilterToggle() {
+    const btn = $("filterToggle");
+    const panel = $("filterPanel");
+    if (!btn) return;
+    const n = countActiveFilters();
+    const open = panel && panel.classList.contains("open");
+    btn.textContent = open
+        ? "✕ Hide filters"
+        : (n ? `🎛️ Filters (${n} on)` : "🎛️ Filters");
+}
+
+function toggleFilters() {
+    const panel = $("filterPanel");
+    if (!panel) return;
+    panel.classList.toggle("open");
+    updateFilterToggle();
+}
 
 function showView(name) {
 
@@ -2343,6 +2589,7 @@ function render() {
 
     const qElement = $("q");
     const currentQuery = qElement ? qElement.value.trim() : "";
+    updateFilterToggle();
     if (currentQuery) logSearchDebounced(currentQuery, list.length);
 
 
@@ -3398,6 +3645,108 @@ let quizStep = 0;
 let quizAnswers = [];
 
 
+/* Applies the quiz picks as filters. If no book matches every pick,
+   it drops the last picks one by one so the reader never lands on an
+   empty page. Returns a short message to show the reader. */
+function applyQuizAnswers() {
+
+    resetFilters();
+
+    const spiceAnswer = quizAnswers.find(a => a.spiceMax !== undefined);
+
+    if (spiceAnswer) {
+        const spice = $("spiceMax");
+        if (spice) spice.value = spiceAnswer.spiceMax;
+    }
+
+    onSliderChange("spice");
+
+    const tagAnswers = quizAnswers.filter(a => a.tag);
+    let used = tagAnswers.slice();
+
+    const applyTags = list => {
+        Object.values(includeTags).forEach(set => set.clear());
+        list.forEach(a => {
+            const category = categoryOf(a.tag);
+            if (includeTags[category]) includeTags[category].add(a.tag);
+        });
+    };
+
+    applyTags(used);
+
+    while (used.length && books.filter(passes).length === 0) {
+        used.pop();
+        applyTags(used);
+    }
+
+    if (used.length === tagAnswers.length) {
+        return "We've set up your filters based on your picks.";
+    }
+
+    if (used.length === 0) {
+        return "No book matched all your picks, so we've only set your spice level. You can add more filters yourself in Browse.";
+    }
+
+    return "No book matched every pick, so we kept the closest ones. You can add more filters yourself in Browse.";
+}
+
+/* Start the quiz at any time (home page button, welcome screen) */
+function startQuiz() {
+
+    track("quiz-started");
+
+    const modal = $("quizModal");
+
+    if (!modal) return;
+
+    quizStep = 0;
+
+    quizAnswers = [];
+
+    renderQuizStep();
+
+    modal.classList.add("open");
+}
+
+
+/* =========================================================
+   WELCOME SCREEN (first visit) — explains the site
+   ========================================================= */
+
+function maybeShowWelcome() {
+
+    if (loadJSON("filterx_welcome_done", false)) return;
+
+    /* returning readers who already did the quiz don't need it */
+    if (loadJSON("filterx_quiz_done", false)) {
+        saveJSON("filterx_welcome_done", true);
+        return;
+    }
+
+    openWelcome();
+}
+
+function openWelcome() {
+    const modal = $("welcomeModal");
+    if (modal) modal.classList.add("open");
+}
+
+function closeWelcome() {
+    saveJSON("filterx_welcome_done", true);
+    const modal = $("welcomeModal");
+    if (modal) modal.classList.remove("open");
+}
+
+function startQuizFromWelcome() {
+    closeWelcome();
+    startQuiz();
+}
+
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeWelcome();
+});
+
+
 function maybeShowQuiz() {
 
     if (
@@ -3443,44 +3792,7 @@ function renderQuizStep() {
         QUIZ_QUESTIONS.length
     ) {
 
-        quizAnswers.forEach(answer => {
-
-            if (answer.tag) {
-
-                const category =
-                    categoryOf(
-                        answer.tag
-                    );
-
-
-                if (
-                    includeTags[category]
-                ) {
-
-                    includeTags[category]
-                        .add(answer.tag);
-                }
-            }
-
-
-            if (
-                answer.spiceMax !==
-                undefined
-            ) {
-
-                const spice =
-                    $("spiceMax");
-
-
-                if (spice) {
-                    spice.value =
-                        answer.spiceMax;
-                }
-            }
-        });
-
-
-        onSliderChange("spice");
+        const quizNote = applyQuizAnswers();
 
 
         buildFacetChips();
@@ -3493,8 +3805,7 @@ function renderQuizStep() {
             </h3>
 
             <p class="detail-desc">
-                We've set up some filters
-                based on your picks.
+                ${quizNote}
             </p>
 
             <button
@@ -5815,7 +6126,7 @@ function initFilterX() {
 
     /* Quiz */
 
-    maybeShowQuiz();
+    maybeShowWelcome();
 }
 
 
