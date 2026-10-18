@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Filter X — Read with Confidence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,13 +16,13 @@
 <header class="topbar">
   <div class="logo">📖 <span>Filter X</span></div>
   <nav class="tabs">
-    <button class="tab-btn active" data-view="home" onclick="showView('home')">Home</button>
-    <button class="tab-btn" data-view="browse" onclick="showView('browse')">Browse</button>
-    <button class="tab-btn" data-view="library" onclick="showView('library')">My Library</button>
-    <button class="tab-btn" data-view="about" onclick="showView('about')">About</button>
+    <button class="tab-btn active" data-view="home" onclick="showView('home')"><span class="tab-ico">🏠</span><span class="tab-label">Home</span></button>
+    <button class="tab-btn" data-view="browse" onclick="showView('browse')"><span class="tab-ico">🔍</span><span class="tab-label">Browse</span></button>
+    <button class="tab-btn" data-view="library" onclick="showView('library')"><span class="tab-ico">📚</span><span class="tab-label">My Library</span></button>
+    <button class="tab-btn" data-view="about" onclick="showView('about')"><span class="tab-ico">ℹ️</span><span class="tab-label">About</span></button>
   </nav>
   <button class="icon-btn theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle spicy dark mode">🌙</button>
-  <button class="btn-solid small" onclick="openAddForm()">+ Add a book</button>
+  <button class="btn-solid small" onclick="openAddForm()">+ Add<span class="hide-sm"> a book</span></button>
 </header>
 
 <!-- ============ HOME ============ -->
@@ -39,10 +39,17 @@
     </div>
     <h1 id="greetingText">👋 Ready to find your next book?</h1>
     <div class="search-bar">
-      <input id="homeSearch" type="text" placeholder="What are you in the mood to read?" onkeydown="if(event.key==='Enter')goSearch()">
+      <input id="homeSearch" type="text" placeholder="Search for a book…" onkeydown="if(event.key==='Enter')goSearch()">
       <button onclick="goSearch()">Search</button>
     </div>
     <div class="chiprow" id="quickChips"></div>
+    <div class="start-here">
+      <div class="start-text"><b>New here?</b> Filter X shows what's inside a book (spice, violence and content warnings) before you read it.</div>
+      <div class="start-buttons">
+        <button class="btn-solid small" onclick="startQuiz()">🎯 Take the 30-second quiz</button>
+        <button class="btn-outline small" onclick="openWelcome()">👋 How it works</button>
+      </div>
+    </div>
   </div>
 
   <div id="continueSection" class="home-section" style="display:none;">
@@ -74,7 +81,8 @@
 <!-- ============ BROWSE ============ -->
 <section class="view" id="view-browse">
   <div class="browse-layout">
-    <aside class="filter-panel">
+    <button class="btn-outline filter-toggle" id="filterToggle" onclick="toggleFilters()" type="button">🎛️ Filters</button>
+    <aside class="filter-panel" id="filterPanel">
       <div class="filter-panel-head">
         <h2>Smart Filters</h2>
         <button class="btn-outline small" onclick="resetFilters()">Reset</button>
@@ -128,11 +136,15 @@
 
     <div class="browse-main">
       <div class="books-head">
-        <h2>Browse Books</h2>
-        <span id="count" class="count"></span>
-        <button class="btn-outline small" onclick="rouletteBrowse()">🎲 Surprise me</button>
-        <button class="btn-outline small" onclick="openBlindDate()">🙈 Blind Date</button>
-        <button class="btn-outline small" onclick="openRequestForm()">📩 Request a book</button>
+        <div class="books-title">
+          <h2>Browse Books</h2>
+          <span id="count" class="count"></span>
+        </div>
+        <div class="books-actions">
+          <button class="btn-outline small" onclick="rouletteBrowse()">🎲 Surprise me</button>
+          <button class="btn-outline small" onclick="openBlindDate()">🙈 Blind Date</button>
+          <button class="btn-outline small" onclick="openRequestForm()">📩 Request a book</button>
+        </div>
       </div>
       <div class="grid" id="grid"></div>
     </div>
@@ -166,6 +178,23 @@
   <div class="modal">
     <button class="modal-close" onclick="closeBlindDate()">✕</button>
     <div id="blindBody"></div>
+  </div>
+</div>
+
+<!-- Welcome modal (first visit) -->
+<div class="modal-backdrop" id="welcomeModal" style="z-index:70" onclick="if(event.target===this)closeWelcome()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeWelcome()">✕</button>
+    <h3>Welcome to Filter X 👋</h3>
+    <p class="welcome-lead">Know what's inside a book before you read it.</p>
+    <p class="detail-desc">Every book here comes with its spice level, how violent it is, and content warnings like cheating or gore, so there are no nasty surprises.</p>
+    <ol class="welcome-steps">
+      <li><span>1</span><div><b>Take a 30-second quiz</b><br>Tell us what you like and we'll set up your filters.</div></li>
+      <li><span>2</span><div><b>Browse and filter</b><br>Choose your spice level and tick anything you want to avoid.</div></li>
+      <li><span>3</span><div><b>Pick with confidence</b><br>Open any book to see its warnings, then save it to your library.</div></li>
+    </ol>
+    <button class="btn-solid" style="width:100%;" onclick="startQuizFromWelcome()">🎯 Take the quick quiz</button>
+    <button class="btn-outline small" style="width:100%;margin-top:8px;" onclick="closeWelcome()">Skip, let me browse</button>
   </div>
 </div>
 
