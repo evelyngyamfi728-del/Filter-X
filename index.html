@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FFFCF7">
 <title>Filter X — Read with Confidence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,14 +30,8 @@
 <!-- ============ HOME ============ -->
 <section class="view active" id="view-home">
   <div class="greeting">
-    <div class="hero-art">
-      <div class="sparkle">✨</div>
-      <div class="book-stack">
-        <div class="stack-book b1"><span>💜</span>Better Choices</div>
-        <div class="stack-book b2"><span>🛡️</span>Safer Reads</div>
-        <div class="stack-book b3"><span>😊</span>Happier Readers</div>
-      </div>
-      <div class="mug-card">📖 Good books.<br>No surprises. ♥</div>
+    <div class="hero-scene" role="img" aria-label="A cozy shelf with books, a plant, a candle and a cup of tea">
+      <span class="hero-tag">📖 Good books. No surprises ♥</span>
     </div>
     <h1 id="greetingText">👋 Ready to find your next book?</h1>
     <div class="search-bar">
@@ -80,6 +76,9 @@
 
 <!-- ============ BROWSE ============ -->
 <section class="view" id="view-browse">
+  <div class="hero-scene slim" role="img" aria-label="A cozy shelf with books, a plant, a candle and a cup of tea">
+    <span class="hero-tag">🔍 Find your next read</span>
+  </div>
   <div class="browse-layout">
     <button class="btn-outline filter-toggle" id="filterToggle" onclick="toggleFilters()" type="button">🎛️ Filters</button>
     <aside class="filter-panel" id="filterPanel">
@@ -153,6 +152,9 @@
 
 <!-- ============ MY LIBRARY ============ -->
 <section class="view" id="view-library">
+  <div class="hero-scene slim" role="img" aria-label="A cozy shelf with books, a plant, a candle and a cup of tea">
+    <span class="hero-tag">📚 Your cozy shelf</span>
+  </div>
   <h1>My Library</h1>
   <div class="stats-bar" id="statsBar"></div>
   <div class="tabs sub-tabs" id="libraryTabs">
@@ -209,6 +211,9 @@
 <!-- About page -->
 <section class="view" id="view-about">
   <div class="about">
+    <div class="hero-scene slim" role="img" aria-label="A cozy shelf with books, a plant, a candle and a cup of tea">
+    <span class="hero-tag">💌 Made for readers</span>
+  </div>
     <h1>About Filter X</h1>
     <p class="about-lead">Know what's inside a book before you read it.</p>
 
@@ -233,6 +238,7 @@
     <h2>Filter X is in beta</h2>
     <p>We're starting with a small library and growing it based on what readers ask for. Can't find your book?</p>
     <button class="btn-solid" onclick="openRequestForm()">📩 Request a book</button>
+    <p class="photo-credit">Background photo by <a href="https://unsplash.com/photos/1emWndlDHs0" target="_blank" rel="noopener">Shunya Koide on Unsplash</a></p>
   </div>
 </section>
 
