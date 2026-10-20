@@ -1003,10 +1003,12 @@ const BASE_BOOKS = [
         title: "The Secret Fiancée",
         author: "Catharina Maura",
         spice: "Moderate",
+        violence: "Very Low",
         extra: [
             "Romance",
             "Age gap",
             "Workplace romance",
+            "Professor/student",
             "Billionaire",
             "Arranged marriage",
             "Angst",
@@ -1035,9 +1037,9 @@ const BASE_BOOKS = [
 
     {
         title: "Bittersweet Memories",
-        author: "—",
-        spice: "High",
-        violence: "Moderate",
+        author: "Catharina Maura",
+        spice: "Moderate",
+        violence: "Very Low",
         gore: "None",
         extra: [
             "Romance",
@@ -1102,6 +1104,7 @@ const CATEGORY_MAP = {
     "Strangers to lovers": "trope",
     "Arranged marriage": "trope",
     "Marriage of convenience": "trope",
+    "Professor/student": "trope",
 
     /* RELATIONSHIP */
     "Marriage": "relationship",
@@ -1316,7 +1319,8 @@ if (!personal || typeof personal !== "object") {
 /* When a book's title/author is corrected, carry over saved favorites,
    status and notes from the old name to the new one. */
 const PERSONAL_KEY_FIXES = {
-    "His Darling Freckles|Alesca Kayser": "His Darling Freckles|Alecsa Kayser"
+    "His Darling Freckles|Alesca Kayser": "His Darling Freckles|Alecsa Kayser",
+    "Bittersweet Memories|—": "Bittersweet Memories|Catharina Maura"
 };
 
 (function migratePersonalKeys() {
@@ -2880,6 +2884,9 @@ function applyTheme(theme) {
             "data-theme",
             safeTheme
         );
+
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) themeMeta.setAttribute("content", safeTheme === "spicy" ? "#1B1420" : "#FFFCF7");
 
 
     const toggle =
